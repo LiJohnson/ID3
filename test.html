@@ -16,8 +16,17 @@
 	$("input").onchange = function(){
 		f = this.files[0]
 		new ID3(this.files[0]).getData(function(data){
-			data = JSON.stringify(data);
-			$("pre").innerHTML = data.replace(/\{/g,"{\n").replace(/\}/g,"}\n").replace(/,/g,",\n");
+			var html = [];
+			data.forEach(function(d){
+				if( d.text.match(/pic/i) ){
+					html.push( d.text + "\n" + "<img src='"+URL.createObjectURL(d.blob)+"' />" )
+				}else{
+					html.push( d.text + "\n" + d.tag + "\n" );
+				}
+			});
+			$("pre").innerHTML += html.join("<hr>");
+
+			window.d = data;
 		});
 		this.value="";
 	};
