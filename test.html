@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+	<script src="ID3.js"></script>
+	<title>test</title>
+</head>
+<body>
+	<input type="file" />
+	<hr>
+	<pre></pre>
+</body>
+<script>
+
+	window.$ = function(arg){ return document.querySelector(arg) };
+
+	$("input").onchange = function(){
+		f = this.files[0]
+		new ID3(this.files[0]).getData(function(data){
+			data = JSON.stringify(data);
+			$("pre").innerHTML = data.replace(/\{/g,"{\n").replace(/\}/g,"}\n").replace(/,/g,",\n");
+		});
+		this.value="";
+	};
+</script>
+</html>
