@@ -203,8 +203,11 @@
 					};
 
 					readAllTag( 10 , function(data){
-						
-						cb.call($this,data);
+						var map = {};
+						data.forEach(function(data){
+							map[data.tag] = data;
+						});
+						cb.call($this,data,map);
 					});
 				});
 			},"byte");
