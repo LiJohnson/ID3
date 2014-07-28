@@ -174,11 +174,17 @@
 		 */
 		this.getData = function( cb ){
 			read(0,10,function(id3){
-				if( !/id3/i.test(coverToStr( id3.subarray(0,3)) ) || id3[3] < 3  )return cb(false);
+				if( !/id3/i.test(coverToStr( id3.subarray(0,3)) )  ){
+					throw("just supported ID3");
+				};
+				if(  id3[3] < 3  ){
+					throw("just supported ID3v2.3");
+				}
+
 				this.getTotalSize(function(totalSize){
 					var end = totalSize +0;
 					var readAllTag = function(index,cb , result){
-						result = result ||  [{text:id3,tag:totalSize,b:[]}];
+						result = result || [];//  [{text:id3,tag:totalSize,b:[]}];
 						if( index >= end )return cb.call($this,result);
 						
 						$this.readTag( index , function(data){
@@ -189,7 +195,7 @@
 									data.b[i] = b[i].toString(16);
 								}
 								data.end > data.start+11 && result.push(data);
-								console.log("LCS" , data);
+								
 								readAllTag( data.end , cb , result);
 							},"byte");
 							
@@ -197,7 +203,7 @@
 					};
 
 					readAllTag( 10 , function(data){
-						console.log(window.d = data);
+						
 						cb.call($this,data);
 					});
 				});
